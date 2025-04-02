@@ -1,0 +1,4 @@
+- hosts: azure_vm_frontend
+  become: yes
+  roles:
+    - enable_nginx

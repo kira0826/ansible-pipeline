@@ -63,7 +63,7 @@
         update_cache: yes
 
     # Instalar Docker
-    - name: Instalar Docker
+    - name: Instalar Docke
       apt:
         name: docker-ce
         state: present
