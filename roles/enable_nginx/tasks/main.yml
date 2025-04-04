@@ -1,0 +1,71 @@
+- name: Actualizar cache de paquetes
+  apt:
+    update_cache: yes
+
+- name: Instalar Nginx y Git
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - nginx
+    - git
+
+- name: Iniciar servicio Nginx
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Asegurar que la carpeta /var/www/html exista
+  file:
+    path: /var/www/html
+    state: directory
+    mode: '0755'
+    
+- name: Eliminar contenido existente
+  file:
+    path: /var/www/html
+    state: absent
+  become: true
+
+- name: Clonar repositorio
+  git:
+    repo: "{{ repo_url }}"
+    dest: /var/www/html
+    version: main
+  become: true
+
+- name: Clonar repositorio Git (rama main)
+  git:
+    repo: "{{repo_url}}"  
+    dest: /var/www/html
+    version: main  
+    force: yes  
+    update: yes 
+
+- name: Cambiar propietario de /var/www/html
+  file:
+    path: /var/www/html
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    recurse: yes
+
+- name: Configurar sitio Nginx
+  template:
+    src: ../templates/nginx-site.conf.j2
+    dest: /etc/nginx/sites-available/static-site.conf
+  notify:
+    - restart nginx
+
+- name: Habilitar sitio Nginx
+  file:
+    src: /etc/nginx/sites-available/static-site.conf
+    dest: /etc/nginx/sites-enabled/static-site.conf
+    state: link
+  notify:
+    - restart nginx
+
+- name: restart nginx
+  systemd:
+    name: nginx
+    state: restarted  

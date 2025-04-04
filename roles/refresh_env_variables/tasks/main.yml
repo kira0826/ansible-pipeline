@@ -1,0 +1,68 @@
+- name: Definir variables de entorno en Jenkins
+  jenkins_script:
+    url: "http://{{devops_vm_ip}}:8080"
+    script: |
+      import jenkins.model.*
+      import hudson.slaves.EnvironmentVariablesNodeProperty
+      
+      // Debug info
+      println ">>> Iniciando configuración de variables de entorno"
+      println ">>> Usuario ejecutando script: " + jenkins.model.Jenkins.getAuthentication().getName()
+      
+      // Obtener instancia de Jenkins
+      def jenkins = Jenkins.get()
+      
+      try {
+        // Obtener propiedades actuales
+        def globalNodeProperties = jenkins.getGlobalNodeProperties()
+        println ">>> Propiedades actuales: " + globalNodeProperties
+        
+        // Verificar propiedades de entorno existentes
+        def existing = globalNodeProperties.getAll(EnvironmentVariablesNodeProperty.class)
+        println ">>> Variables de entorno existentes: " + existing
+        if (!existing.isEmpty()) {
+          println ">>> Variables actuales: " + existing[0].getEnvVars()
+        }
+        
+        // Eliminar propiedad existente primero
+        existing.each { 
+          println ">>> Eliminando propiedad existente"
+          globalNodeProperties.remove(it) 
+        }
+        
+        // Crear nueva configuración
+        def envVarsNodeProperty = new EnvironmentVariablesNodeProperty()
+        def envVars = envVarsNodeProperty.getEnvVars()
+        
+        // Setear variables con valores específicos para depuración
+        envVars.put("REMOTE_HOST", "{{ frontend_ip }}")
+        envVars.put("REMOTE_USER", "{{ ansible_user }}")
+        envVars.put("REMOTE_PASSWORD", '{{ password }}'.toString())
+        envVars.put("REMOTE_PATH", "{{ statics_folder }}")
+        envVars.put("DEBUG_TIMESTAMP", new Date().toString())  // Para verificar actualizaciones
+        
+        println ">>> Nuevas variables configuradas: " + envVars
+        
+        // Añadir al Jenkins
+        globalNodeProperties.add(envVarsNodeProperty)
+        println ">>> Variables añadidas a las propiedades globales"
+        
+        // Guardado explícito
+        jenkins.save()
+        println ">>> Configuración guardada"
+        
+        // Forzar a que Ansible detecte un cambio
+        println "CAMBIOS_REALIZADOS"
+        return true
+      } catch (Exception e) {
+        println ">>> ERROR: " + e.getMessage()
+        e.printStackTrace()
+        throw e
+      }
+  register: jenkins_script_result
+  changed_when: "'CAMBIOS_REALIZADOS' in jenkins_script_result.output"
+
+- name: Mostrar salida del script
+  debug:
+    var: jenkins_script_result.output
+    verbosity: 0
