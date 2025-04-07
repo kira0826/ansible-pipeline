@@ -107,7 +107,7 @@ Once the image was ready, I installed Docker, Docker Compose, and other required
 
 **Service Check (on the VM):**
 
-![image.png](attachment:f869c787-fc3e-4055-8f07-95b0295d7b2c:image.png)
+![image](https://github.com/user-attachments/assets/3bef409d-fe80-457d-8b58-110dd1ddd135)
 
 ---
 
@@ -178,7 +178,8 @@ Finally, the static frontend files are cloned into `/var/www/html`, making them 
 
 **Exposed Service Check:**
 
-![image.png](attachment:593cb368-03f5-4002-b3c0-2667560b3095:image.png)
+![image](https://github.com/user-attachments/assets/1c07d51f-9ce0-4dcb-a4d7-adf7e35cbed8)
+
 
 ---
 
@@ -282,11 +283,13 @@ Next, Jenkins needs access to specific environment variables such as the remote 
 
 This is equivalent to manually running the script in the Jenkins script console:
 
-![image.png](attachment:bfee6874-fb68-4fb7-a772-b7bafc25ac1b:image.png)
+![image](https://github.com/user-attachments/assets/5e91c62a-1745-4d0a-8b2b-3df7951ef5bc)
+
 
 Verification of the created environment variables:
 
-![image.png](attachment:6111ec1a-671f-47d8-87b0-ae7c5877debc:image.png)
+![image](https://github.com/user-attachments/assets/7260f244-8813-45c2-8fbb-75f4b532602a)
+
 
 ---
 
@@ -346,7 +349,8 @@ Jenkins will only load this script if it's located at the path `/var/jenkins_hom
 
 Job verification:
 
-![image.png](attachment:f5e2b07b-5a50-4101-8759-955545eac45f:image.png)
+![image](https://github.com/user-attachments/assets/b5d957d1-c597-48cc-8c20-733cb82fbe74)
+
 
 For more examples, refer to the [official Configuration as Code plugin demos](https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos).
 
@@ -421,8 +425,9 @@ This setup ensures secure and seamless integration between SonarQube and GitHub 
 
 ### Secrets generated
 
-![image.png](attachment:249307d0-ac92-43ea-a488-e6584b0bcd91:image.png)
+![image](https://github.com/user-attachments/assets/0b5b0461-6ef9-4553-b76d-c4b124272af8)
+
 
 ### Sonar after a PR
 
-![image.png](attachment:42c8849a-fdad-45fc-927d-f37c12d278e9:image.png)
+![image](https://github.com/user-attachments/assets/f1e46efc-957d-427a-a130-da4f4b47ef7f)
