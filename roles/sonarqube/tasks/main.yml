@@ -1,0 +1,10 @@
+
+# - name: set up password
+#   include_tasks: p0_define_password.yml
+
+# - name: create sonarqube envs
+#   include_tasks: p1_set_sonar_token.yml
+
+- name: create github envs
+  include_tasks: p2_set_git_envs.yml
+    

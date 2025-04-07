@@ -57,7 +57,14 @@
     state: present
     reload: yes
 
-- name: Copiar archivo de configuración del docker-compose
+
+- name: Copy Dockerfile 
+  copy:
+    src: ../Dockerfile
+    dest: /home/{{ ansible_user }}/Dockerfile
+
+
+- name: Copy docker-compose
   copy:
     src: ../docker-compose.yml
     dest: /home/{{ ansible_user }}/docker-compose.yml
@@ -69,32 +76,4 @@
     chdir: /home/{{ ansible_user }}/
   become: yes
   
-# Plugins for Jenkins: 
-
-- name: Copiar archivo plugins.txt al contenedor
-  copy:
-    src: ../files/plugins.txt  
-    dest: /home/{{ ansible_user }}/plugins.txt
-
-- name: Copiar archivo plugins.txt al contenedor Jenkins
-  command: docker cp /home/{{ ansible_user }}/plugins.txt jenkins:/plugins.txt
-
-
-- name: Copiar archivo de configuración .groovy al host
-  copy:
-    src: ../init.groovy.d/init.groovy
-    dest: /home/{{ ansible_user }}/init.groovy
-
-- name: Crear carpeta init.groovy.d en el contenedor como root
-  command: docker exec --user root jenkins mkdir -p /var/lib/jenkins/init.groovy.d
-
-- name: Copiar archivo .groovy
-  command: docker cp /home/{{ ansible_user }}/init.groovy jenkins:/usr/share/jenkins/ref/init.groovy.d/
-  notify: restart jenkins
-
-- name: Instalar plugins jenkins
-  command: docker exec -it jenkins jenkins-plugin-cli --plugin-file /plugins.txt
-  become_user: "{{ ansible_user }}"
-  become_method: su
-  notify: restart jenkins
-
+  

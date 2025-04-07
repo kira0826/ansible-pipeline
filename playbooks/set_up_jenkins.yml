@@ -2,4 +2,5 @@
   become: yes
   gather_facts: yes
   roles:
-    - refresh_env_variables
+    - jenkins
+              

@@ -1,0 +1,37 @@
+- name: verify jenkins
+  become: true
+  uri:
+    url: "http://{{ devops_vm_ip }}:8080/login"
+    method: GET
+    status_code: 200
+    timeout: 3
+  register: jenkins_status
+  retries: 5
+  delay: 3
+  until: jenkins_status.status == 200
+  
+
+- name: Crear carpeta casc_configs dentro del contenedor
+  become: true
+  command: docker exec jenkins mkdir -p /var/jenkins_home/casc_configs
+
+
+- name: Copy job template to Jenkins VM
+  become: true
+  copy:
+    src: ../files/jenkins_teclado_repo_job.yml
+    dest: /home/{{ ansible_user }}/jenkins_teclado_repo_job.yml
+
+- name: Copy job template to Jenkins container 
+  become: true
+  command: docker cp /home/{{ ansible_user }}/jenkins_teclado_repo_job.yml jenkins:/var/jenkins_home/jenkins.yaml
+
+- name: Assign ownership to jenkins user
+  become: true
+  command: docker exec -u 0 jenkins chown jenkins:jenkins /var/jenkins_home/jenkins.yaml
+
+- name: Give enough permissions to jenkins user
+  become: true
+  command: docker exec -u 0 jenkins chmod 774 /var/jenkins_home/jenkins.yaml
+  notify: restart jenkins
+

@@ -1,5 +1,0 @@
----
-- name: restart jenkins
-  command: sudo docker restart jenkins
-  become: yes 
-

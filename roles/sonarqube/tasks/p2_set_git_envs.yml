@@ -1,0 +1,5 @@
+- name: Set environment variable in GitHub
+  shell: |
+    gh secret set SONAR_HOST -b "{{ sonar_host }}" -R {{ github_repo }}
+  environment:
+    GH_TOKEN: "{{ github_pat }}"

@@ -1,0 +1,13 @@
+git
+ssh-steps
+workflow-aggregator
+ssh-steps
+credentials-binding
+github
+github-branch-source
+configuration-as-code
+workflow-cps
+workflow-job
+job-dsl
+docker-workflow
+docker-commons

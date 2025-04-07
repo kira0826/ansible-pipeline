@@ -1,0 +1,40 @@
+# Ignore variable directories that may contain sensitive data
+defaults/
+vars/
+group_vars/
+host_vars/
+
+# Ignore inventory files (may contain internal IPs or hostnames)
+inventory/
+*.inventory
+
+# Ignore Ansible execution temporary files
+*.retry
+*.log
+
+# Ignore private keys and certificates
+*.pem
+*.key
+*.crt
+
+# Ignore secret files
+secrets.yml
+vault.yml
+*.vault
+*.enc
+
+# Ignore role variable folders (for custom roles)
+roles/**/defaults/
+roles/**/vars/
+roles/**/group_vars/
+roles/**/host_vars/
+
+# Other common ignores
+.env
+*.pyc
+__pycache__/
+.cache/
+.ansible/
+
+# GitHub CLI auth token (if stored temporarily)
+github_pat.txt

@@ -1,3 +1,7 @@
+- name: Check jenkins status
+  command: echo "Check jenkins status"
+  notify: verify jenkins
+  
 - name: Definir variables de entorno en Jenkins
   jenkins_script:
     url: "http://{{devops_vm_ip}}:8080"
@@ -39,7 +43,7 @@
         envVars.put("REMOTE_USER", "{{ ansible_user }}")
         envVars.put("REMOTE_PASSWORD", '{{ password }}'.toString())
         envVars.put("REMOTE_PATH", "{{ statics_folder }}")
-        envVars.put("DEBUG_TIMESTAMP", new Date().toString())  // Para verificar actualizaciones
+      
         
         println ">>> Nuevas variables configuradas: " + envVars
         

@@ -1,0 +1,17 @@
+---
+- name: restart jenkins
+  command: sudo docker restart jenkins
+  become: yes 
+
+- name: verify jenkins
+  become: true
+  uri:
+    url: "http://{{ devops_vm_ip }}:8080/login"
+    method: GET
+    status_code: 200
+    timeout: 3
+  register: jenkins_status
+  retries: 5
+  delay: 3
+  until: jenkins_status.status == 200
+  

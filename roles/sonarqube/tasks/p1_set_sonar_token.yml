@@ -1,0 +1,74 @@
+- name: Wait for SonarQube to be up and running
+  become: true
+  uri:
+    url: "{{ sonar_host }}/api/system/status"
+    method: GET
+    status_code: 200
+    return_content: true
+  register: sonar_status
+  retries: 10
+  delay: 5
+  until: sonar_status.json.status == "UP"
+  
+- name: Crear token en SonarQube
+  uri:
+    url: "{{ sonar_host }}/api/user_tokens/generate"
+    method: POST
+    user: "{{ admin_user }}"
+    password: "{{ new_password }}"
+    force_basic_auth: yes
+    status_code: 200
+    headers:
+      Content-Type: "application/x-www-form-urlencoded"
+    body: "name=GitHubToken"
+    body_format: form-urlencoded
+    return_content: yes
+  register: sonar_token_response
+
+- name: Extraer token generado de la respuesta
+  set_fact:
+    sonar_token: "{{ sonar_token_response.json.token }}"
+
+- name: Mostrar el token generado
+  debug:
+    msg: "El token generado es: {{ sonar_token }}"
+
+- name: Añadir clave GPG de GitHub CLI
+  become: true  
+  apt_key:
+    url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
+    state: present
+  
+- name: Añadir repositorio de GitHub CLI
+  become: true 
+  apt_repository:
+    repo: "deb [arch={{ ansible_architecture }}] https://cli.github.com/packages stable main"
+    state: present
+    filename: github-cli
+  
+- name: Actualizar caché de apt
+  become: true 
+  apt:
+    update_cache: yes
+  
+- name: Instalar GitHub CLI
+  become: true
+  apt:
+    name: gh
+    state: present
+
+- name: Subir SONAR_TOKEN como secreto en GitHub
+  shell: |
+    gh secret set SONAR_TOKEN -b"{{ sonar_token }}" -R {{ github_repo }}
+  environment:
+    GH_TOKEN: "{{ github_pat }}"
+
+- name: Verificar que el secreto SONAR_TOKEN fue creado
+  shell: |
+    gh secret list -R {{ github_repo }} | grep SONAR_TOKEN
+  environment:
+    GH_TOKEN: "{{ github_pat }}"
+  register: gh_secret_check
+  failed_when: "'SONAR_TOKEN' not in gh_secret_check.stdout"
+
+

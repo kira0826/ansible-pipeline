@@ -1,4 +1,0 @@
-frontend_ip: 20.185.56.17
-devops_vm_ip: 172.191.55.54
-password: "Segura$123"
-statics_folder: "/var/www/html"
