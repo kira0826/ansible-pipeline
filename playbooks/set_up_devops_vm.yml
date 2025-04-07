@@ -1,0 +1,7 @@
+- hosts: azure_vm_pipeline
+  become: yes
+  gather_facts: yes
+  roles:
+    - jenkins
+    - sonarqube
+              

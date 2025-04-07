@@ -4,7 +4,7 @@
     url: "http://{{ devops_vm_ip }}:8080/login"
     method: GET
     status_code: 200
-    timeout: 3
+    timeout: 10
   register: jenkins_status
   retries: 5
   delay: 3

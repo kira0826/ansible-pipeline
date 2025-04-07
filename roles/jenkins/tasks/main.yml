@@ -3,9 +3,9 @@
   include_tasks: p1_install_plugins.yml
 
 - name: Configure environment variables
-  include_tasks: p3_set_up_env_variables.yml
+  include_tasks: p2_set_up_env_variables.yml
 
 - name: Configure teclado job
-  include_tasks: p4_job_creation.yml
+  include_tasks: p3_job_creation.yml
 
   
